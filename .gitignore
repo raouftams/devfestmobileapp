@@ -1,6 +1,7 @@
 node_modules/
 .expo/
 dist/
+.env
 npm-debug.*
 *.jks
 *.p8
@@ -11,6 +12,7 @@ npm-debug.*
 web-build/
 google-services.json
 GoogleService-Info.plist
+firebase.js
 
 patches/
 # macOS
