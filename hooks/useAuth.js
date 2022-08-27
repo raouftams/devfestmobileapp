@@ -1,6 +1,14 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
+import {
+    GoogleAuthProvider, 
+    onAuthStateChanged,
+    signInWithCredential,
+    signOut
+} from "@firebase/auth";
+
+import { auth } from '../firebase'
 
 
 const AuthContext = createContext({})
@@ -17,23 +25,60 @@ const config = {
 
 export const AuthProvider = ({ children }) => {
 
+    const [error, setError] = useState(null);
+    const [user, setUser] = useState(null);
+    const [loadingInitial, setLoadingInitial] = useState(true);
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => 
+        onAuthStateChanged(auth, (user) => {
+            if(user){
+                //User logged in
+                setUser(user)
+            }else{
+                //Not logged in
+                setUser(null)
+            }
+
+            setLoadingInitial(false)
+        }), 
+        []
+    );
+
 
     const [request, response, promptAsync] = Google.useAuthRequest(config);
-
     const signInWithGoogle = async () => {
-        promptAsync({ useProxy: true })
+        setLoading(true)
+        await promptAsync({ useProxy: true }).then(async (response) => {
+            if (response?.type === 'success') {
+                const { idToken, accessToken } = response.authentication;
+                const credential = GoogleAuthProvider.credential(idToken, accessToken);
+                await signInWithCredential(auth, credential);
+            }
+            return Promise.reject()
+        })
+        .catch(error => setError(error))
+        .finally(setLoading(false))
+    }
+        
 
-        if (response?.type === 'success') {
-            console.log('success')
-        }
+    const logout = async () =>{
+        setLoading(true)
+        signOut(auth).catch(error => setError(error)).finally(setLoading(false));
     }
 
+
+    const memoedValue = useMemo(() => ({
+        user,
+        loading,
+        error,
+        signInWithGoogle,
+        logout
+    }), [user, loading, error])
+
     return (
-        <AuthContext.Provider value={{
-            user: null,
-            signInWithGoogle
-        }}>
-            {children}
+        <AuthContext.Provider value={memoedValue}>
+            {!loadingInitial && children}
         </AuthContext.Provider>
     )
 }
