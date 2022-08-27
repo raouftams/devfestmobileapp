@@ -16,9 +16,9 @@ const AuthContext = createContext({})
 WebBrowser.maybeCompleteAuthSession()
 
 const config = {
-    androidClientId: '1086391481912-clsm2uuliqve41ndi0r6b76b4vhgrihv.apps.googleusercontent.com',
-    expoClientId: '1086391481912-c1ed9jqoiaiho52t2t78qmnch94o6na1.apps.googleusercontent.com',
-    iosClientId: '1086391481912-eqf9fqm9cj2mo20qrbjo1t8nksqlgiap.apps.googleusercontent.com',
+    androidClientId: 'Your android client id',
+    expoClientId: 'Your expo client id',
+    iosClientId: 'Your ios client id',
     scopes: ["profile", "email"],
     permissions: ["public_profile", "email", "gender", "birthday", "location"]
 }
