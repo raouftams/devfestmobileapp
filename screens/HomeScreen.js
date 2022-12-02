@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons"
 import ScrollingButtonMenu from 'react-native-scroll-menu';
 import { whitespace } from 'tailwind-rn/unsupported-core-plugins'
+import Navbar from '../components/Navbar'
 
 const HomeScreen = () => {
     //const { signInWithGoogle, loading } = useAuth();
@@ -79,19 +80,29 @@ const HomeScreen = () => {
                 activeBackgroundColor="#4F95FF"
             />
 
-            <Text style={tw("text-xl font-semibold text-gray-700 mx-4 mt-4")}>
-                What you may like this week
-            </Text>
-            
             <ScrollView>
+                <Text style={tw("text-xl font-semibold text-gray-700 mx-4 mt-4")}>
+                    What you may like this week
+                </Text>
+            
                 {recommendedData.map(recommendation => {
                     return (
-                        <View>
+                        <View style={tw("mt-4")}>
                             <Text style={[tw("text-lg font-bold mx-4"),{color:"#4F95FF"}]}>{recommendation.type}</Text>
-                            <View style={tw("flex-1 flew-row mx-4")}>
+                            <View style={tw("flex-1 flex-row justify-between mx-4")}>
                                 {recommendation.data.map(element => {
                                     return (
-                                        <Text>{element.name}</Text>
+                                        <View style={tw("border border-transparent bg-white rounded-xl p-2 w-44 h-52")}>
+                                            
+                                            <View style={tw("flex-1 flex-row justify-between items-center")}>
+                                                <View>
+                                                    <Text style={tw("")}>{element.name}</Text>
+                                                    <Text style={tw("text-sm text-gray-500")}>{element.location}</Text>
+                                                </View>
+                                                <Text style={tw("text-2xl font-bold text-yellow-300")}>{element.score ? element.score : null}</Text>
+
+                                            </View>
+                                        </View>
                                     )
                                 })}
                             </View>
@@ -100,13 +111,15 @@ const HomeScreen = () => {
                     )
                 })}
             </ScrollView>
+
+            <Navbar/>
         </SafeAreaView>
     )
 }
 
 const recommendedData = [
     {
-        type: 'restaurants',
+        type: 'Restaurants',
         data: [
             {
                 name: "Casbah Istanbul",
