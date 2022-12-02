@@ -17,17 +17,115 @@ import {
   import { useTailwind } from "tailwind-rn/dist";
   import SenderMessage from "../components/SenderMessage";
   import ReceiverMessage from "../components/ReceiverMessage";
+  import { Audio } from 'expo-av';
   
+
+  const messages = [
+    {
+        id: 1,
+        sender: "bot",
+        text: "Hello, I am Fennec your touristic assistant Here are instructions you can make: Find Hospital nearby, Call the police",
+    }
+]
+
+
   const MessageScreen = () => {
     const tw = useTailwind();
 
-    const messages = [
-        {
-            id: 1,
+    const [recording, setRecording] = useState();
+    const [input, setInput] = useState()
+    const [data, setData] = useState(messages)
+    const [vocalURI, SetVocalURI] = useState(null)
+
+    async function startRecording() {
+      try {
+        console.log('Requesting permissions..');
+        await Audio.requestPermissionsAsync();
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: true,
+          playsInSilentModeIOS: true,
+        });
+  
+        console.log('Starting recording..');
+        const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
+        );
+        setRecording(recording);
+        console.log('Recording started');
+      } catch (err) {
+        console.error('Failed to start recording', err);
+      }
+    }
+  
+    async function stopRecording() {
+      console.log('Stopping recording..');
+      setRecording(undefined);
+      await recording.stopAndUnloadAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+      });
+      const uri = recording.getURI();
+      SetVocalURI(recording.getURI())
+      console.log('Recording stopped and stored at', uri);
+      const response = await uploadAudioAsync(uri);
+      fetchedData = JSON.parse(response.data);
+      if(fetchedData.text === ""){
+        let botResponse = {
+            id: data.length + 1,
             sender: "bot",
-            text: "Hello, I am Fennec your touristic assistant Here are instructions you can make: Find Hospital nearby, Call the police",
+            text: "Sorry i didn't understand"
         }
-    ]
+        setData([...data, botResponse])
+      }else{
+        let botResponse = {
+            id: data.length + 1,
+            sender: "bot",
+            text: fetchedData.text
+        }
+        setData([...data, botResponse])
+      }
+      
+    }
+
+    async function uploadAudioAsync(uri) {
+        console.log("Uploading " + uri);
+        let apiUrl = 'http://YOUR_SERVER_HERE/upload';
+        let uriParts = uri.split('.');
+        let fileType = uriParts[uriParts.length - 1];
+      
+        let formData = new FormData();
+        formData.append('file', {
+          uri,
+          name: `recording.${fileType}`,
+          type: `audio/x-${fileType}`,
+        });
+      
+        let options = {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        };
+      
+        console.log("POSTing " + uri + " to " + apiUrl);
+        return fetch(apiUrl, options);
+      }
+
+
+    const sendMessage = () => {
+        console.log(input)
+        let tempData = data
+        tempData.push({
+            id: data.length + 1,
+            sender: "user",
+            text: input
+        })
+        setInput("")
+        console.log(tempData)
+        setData(tempData)
+    }
+  
 
      
     return (
@@ -45,7 +143,7 @@ import {
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <FlatList
-              data={messages}
+              data={data}
               inverted={-1}
               style={tw("pl-0")}
               keyExtractor={(item) => item.id}
@@ -67,17 +165,25 @@ import {
           >
             <TouchableOpacity 
                   style={tw("flex justify-center items-center")}
-                  onPress={() => navigation.navigate("Help")}
+                  onPress={recording ? stopRecording : startRecording}
                 >
-                    <Ionicons name='mic-outline' size={30} color={"#4F95FF"}/>
+                    { recording ?
+                        <Ionicons name='mic-off-outline' size={30} color={"#FF3131"}/>
+                    :
+                        <Ionicons name='mic-outline' size={30} color={"#4F95FF"}/>
+                    }
+                    
             </TouchableOpacity> 
             <TextInput
-              style={tw("h-10 w-4/5 text-md font-semibold")}
+              style={tw("h-10 w-4/5 font-semibold")}
               placeholder="Send Message..."
+              onChangeText={setInput}
+              onSubmitEditing={sendMessage}
+              value={input}
             />
             <TouchableOpacity 
                   style={tw("flex justify-center items-center")}
-                  onPress={() => navigation.navigate("Help")}
+                  onPress={() => sendMessage()}
                 >
                     <Ionicons name='send-outline' size={30} color={"#4F95FF"}/>
             </TouchableOpacity>  

@@ -24,7 +24,7 @@ const Header = ({ title, callEnabled }) => {
         >
           <Ionicons name="chevron-back-outline" size={34} color="#4F95FF" />
         </TouchableOpacity>
-        <Text style={tw("text-2xl font-bold text pl-14")}>
+        <Text style={tw("text-2xl font-bold pl-14")}>
           {title}
         </Text>
       </View>
