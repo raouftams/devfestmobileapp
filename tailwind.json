@@ -133,6 +133,12 @@
 			"marginRight": 32
 		}
 	},
+	"mx-2": {
+		"style": {
+			"marginLeft": 8,
+			"marginRight": 8
+		}
+	},
 	"mt-4": {
 		"style": {
 			"marginTop": 16
@@ -176,6 +182,31 @@
 	"mt-11": {
 		"style": {
 			"marginTop": 44
+		}
+	},
+	"ml-2": {
+		"style": {
+			"marginLeft": 8
+		}
+	},
+	"mt-6": {
+		"style": {
+			"marginTop": 24
+		}
+	},
+	"mb-1": {
+		"style": {
+			"marginBottom": 4
+		}
+	},
+	"ml-20": {
+		"style": {
+			"marginLeft": 80
+		}
+	},
+	"mb-20": {
+		"style": {
+			"marginBottom": 80
 		}
 	},
 	"flex": {
@@ -328,6 +359,11 @@
 	"items-baseline": {
 		"style": {
 			"alignItems": "baseline"
+		}
+	},
+	"justify-end": {
+		"style": {
+			"justifyContent": "flex-end"
 		}
 	},
 	"justify-center": {
@@ -700,6 +736,11 @@
 	"text-center": {
 		"style": {
 			"textAlign": "center"
+		}
+	},
+	"text-justify": {
+		"style": {
+			"textAlign": "justify"
 		}
 	},
 	"text-2xl": {

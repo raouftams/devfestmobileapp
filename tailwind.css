@@ -108,6 +108,11 @@
   margin-right: 2rem
 }
 
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem
+}
+
 .mt-4 {
   margin-top: 1rem
 }
@@ -142,6 +147,26 @@
 
 .mt-11 {
   margin-top: 2.75rem
+}
+
+.ml-2 {
+  margin-left: 0.5rem
+}
+
+.mt-6 {
+  margin-top: 1.5rem
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem
+}
+
+.ml-20 {
+  margin-left: 5rem
+}
+
+.mb-20 {
+  margin-bottom: 5rem
 }
 
 .flex {
@@ -262,6 +287,10 @@
 
 .items-baseline {
   align-items: baseline
+}
+
+.justify-end {
+  justify-content: flex-end
 }
 
 .justify-center {
@@ -519,6 +548,10 @@
 
 .text-center {
   text-align: center
+}
+
+.text-justify {
+  text-align: justify
 }
 
 .text-2xl {
