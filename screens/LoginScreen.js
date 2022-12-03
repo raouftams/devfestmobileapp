@@ -50,12 +50,12 @@ const LoginScreen = () => {
                 Please enter your login information to continue
             </Text>
             <TextInput
-              style={tw("mx-4 text-md mt-8 py-4 px-2 border border-gray-400 rounded-md")}
+              style={tw("mx-4 mt-8 py-4 px-2 border border-gray-400 rounded-md")}
               placeholder='Username or Email'
             />
             <TextInput
-              
-              style={tw("mx-4 text-md mt-4 py-4 px-2 border border-gray-400 rounded-md")}
+              secureTextEntry={true}
+              style={tw("mx-4 mt-4 py-4 px-2 border border-gray-400 rounded-md")}
               placeholder='Password'
             />
 
